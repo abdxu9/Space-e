@@ -66,7 +66,7 @@ try {
         ],
         from_point_hints: ['Current Location'],  // Label for the current location
         to_point_hints: ['lecoq'],
-        out_arrays: ['weights', 'times', 'distances'],
+        out_arrays: ['weights', 'times', 'distances'], //return times in secondes
         vehicle: 'car'
         })
     }
@@ -93,4 +93,73 @@ return new Promise((resolve, reject) => {
 
 // Call the function
 getLocationAndCallAPI();
+
+async function getLocationAndCallRoutingAPI() {
+    try {
+      // Step 1: Get current location (latitude, longitude)
+      const position = await getCurrentLocation();
+  
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+  
+      console.log("User's Current Location:", latitude, longitude);
+  
+      // Step 2: Create the URL query string for the GraphHopper API
+      const query = new URLSearchParams({
+        key: 'cf3d916c-ca66-43f1-9889-d5efbc56d457'  // Replace with your actual GraphHopper API key
+      }).toString();
+  
+      // Step 3: Send POST request to GraphHopper Routing API
+      const resp = await fetch(
+        `https://graphhopper.com/api/1/route?${query}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            profile: 'car',  // The vehicle type, e.g., car, bike, foot, etc.
+            points: [
+              [longitude, latitude], // User's current location as the start point
+              [3.08743, 45.77116]    // Example destination point (replace as needed)
+            ],
+            point_hints: [
+              'Lindenschmitstraße',  // Optional hints for route snapping
+              'Thalkirchener Str.'
+            ],
+            snap_preventions: [
+              'motorway',  // Avoid motorways, ferries, and tunnels
+              'ferry',
+              'tunnel'
+            ],
+            details: ['road_class', 'surface']  // Additional route details
+          })
+        }
+      );
+  
+      // Step 4: Await the JSON response from GraphHopper API
+      const data = await resp.json();
+      console.log('GraphHopper Route Data:', data);
+  
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
+  }
+  
+  // Helper function to get current location via Geolocation API
+  function getCurrentLocation() {
+    return new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      } else {
+        reject(new Error("Geolocation is not supported by this browser."));
+      }
+    });
+  }
+  
+  // Call the function to get location and call the API
+getLocationAndCallRoutingAPI();
+  
+
+
 
