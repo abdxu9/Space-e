@@ -1,22 +1,21 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Map with Route</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        #map {
-            height: 500px;
-            width: 100%;
-        }
+        #map { height: 500px; width: 100%; }
+        #error-message { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="map"></div>
+<div id="error-message"></div>
 
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     // Initialize the Leaflet map
     const map = L.map('map').setView([51.505, -0.09], 13); // Default view
@@ -30,18 +29,19 @@
         try {
             // Get user's current location
             const position = await getCurrentLocation();
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
+            const { latitude, longitude } = position.coords;
 
             console.log("User's Current Location:", latitude, longitude);
             map.setView([latitude, longitude], 13);
 
-            const query = new URLSearchParams({
-                key: 'cf3d916c-ca66-43f1-9889-d5efbc56d457'  // Replace with your actual GraphHopper API key
-            }).toString();
+            // Destination coordinates (replace with your desired destination)
+            const destLat = 45.77116;
+            const destLon = 3.08743;
+
+            const apiKey = 'cf3d916c-ca66-43f1-9889-d5efbc56d457'; // Replace with your actual GraphHopper API key
 
             const resp = await fetch(
-                `https://graphhopper.com/api/1/route?${query}`,
+                `https://graphhopper.com/api/1/route?key=${apiKey}`,
                 {
                     method: 'POST',
                     headers: {
@@ -51,11 +51,12 @@
                         profile: 'car',
                         points: [
                             [longitude, latitude],
-                            [3.08743, 45.77116]
+                            [destLon, destLat]
                         ],
                         point_hints: ['Current Location', 'Destination'],
                         snap_preventions: ['motorway', 'ferry', 'tunnel'],
-                        details: ['road_class', 'surface']
+                        details: ['road_class', 'surface'],
+                        points_encoded: false  // Set to false to receive non-encoded polylines
                     })
                 }
             );
@@ -69,50 +70,21 @@
 
             // Check if paths exist
             if (data.paths && data.paths.length > 0) {
-                const encodedPoints = data.paths[0].points;  // Get the encoded polyline
-                const routeCoordinates = decodePolyline(encodedPoints);  // Decode polyline
-
+                // The points are now in the format [[lon1, lat1], [lon2, lat2], ...]
+                // We need to reverse them for Leaflet which expects [lat, lon]
+                const routeCoordinates = data.paths[0].points.coordinates.map(point => [point[1], point[0]]);
+                
                 // Plot the route on the map
                 const routeLine = L.polyline(routeCoordinates, { color: 'blue' }).addTo(map);
                 map.fitBounds(routeLine.getBounds());
             } else {
-                console.error('No valid route found:', data);
+                throw new Error('No valid route found');
             }
 
         } catch (error) {
             console.error('Error occurred:', error);
+            document.getElementById('error-message').textContent = `Error: ${error.message}`;
         }
-    }
-
-    function decodePolyline(encoded) {
-        let coordinates = [];
-        let index = 0, len = encoded.length;
-        let lat = 0, lng = 0;
-
-        while (index < len) {
-            let b, shift = 0, result = 0;
-            do {
-                b = encoded.charCodeAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            let dlat = ((result >> 1) ^ (-(result & 1)));
-            lat += dlat;
-
-            shift = 0;
-            result = 0;
-            do {
-                b = encoded.charCodeAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            let dlng = ((result >> 1) ^ (-(result & 1)));
-            lng += dlng;
-
-            coordinates.push([lat / 1E5, lng / 1E5]); // Divide by 1E5 to get the correct precision
-        }
-
-        return coordinates;
     }
 
     function getCurrentLocation() {
@@ -131,5 +103,3 @@
 
 </body>
 </html>
-
-
