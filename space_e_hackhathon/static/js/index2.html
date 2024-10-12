@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Route</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+    // Initialize the Leaflet map
+    const map = L.map('map').setView([51.505, -0.09], 13); // Default view
+
+    // Add a tile layer (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    async function getLocationAndCallRoutingAPI() {
+        try {
+            // Get user's current location
+            const position = await getCurrentLocation();
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            console.log("User's Current Location:", latitude, longitude);
+            map.setView([latitude, longitude], 13);
+
+            const query = new URLSearchParams({
+                key: 'cf3d916c-ca66-43f1-9889-d5efbc56d457'  // Replace with your actual GraphHopper API key
+            }).toString();
+
+            const resp = await fetch(
+                `https://graphhopper.com/api/1/route?${query}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        profile: 'car',
+                        points: [
+                            [longitude, latitude],
+                            [3.08743, 45.77116]
+                        ],
+                        point_hints: ['Current Location', 'Destination'],
+                        snap_preventions: ['motorway', 'ferry', 'tunnel'],
+                        details: ['road_class', 'surface']
+                    })
+                }
+            );
+
+            if (!resp.ok) {
+                throw new Error(`HTTP error! status: ${resp.status}`);
+            }
+
+            const data = await resp.json();
+            console.log('GraphHopper Route Data:', data);
+
+            // Check if paths exist
+            if (data.paths && data.paths.length > 0) {
+                const encodedPoints = data.paths[0].points;  // Get the encoded polyline
+                const routeCoordinates = decodePolyline(encodedPoints);  // Decode polyline
+
+                // Plot the route on the map
+                const routeLine = L.polyline(routeCoordinates, { color: 'blue' }).addTo(map);
+                map.fitBounds(routeLine.getBounds());
+            } else {
+                console.error('No valid route found:', data);
+            }
+
+        } catch (error) {
+            console.error('Error occurred:', error);
+        }
+    }
+
+    function decodePolyline(encoded) {
+        let coordinates = [];
+        let index = 0, len = encoded.length;
+        let lat = 0, lng = 0;
+
+        while (index < len) {
+            let b, shift = 0, result = 0;
+            do {
+                b = encoded.charCodeAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            let dlat = ((result >> 1) ^ (-(result & 1)));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charCodeAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            let dlng = ((result >> 1) ^ (-(result & 1)));
+            lng += dlng;
+
+            coordinates.push([lat / 1E5, lng / 1E5]); // Divide by 1E5 to get the correct precision
+        }
+
+        return coordinates;
+    }
+
+    function getCurrentLocation() {
+        return new Promise((resolve, reject) => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(resolve, reject);
+            } else {
+                reject(new Error("Geolocation is not supported by this browser."));
+            }
+        });
+    }
+
+    // Call the function to get location and display the route on the map
+    getLocationAndCallRoutingAPI();
+</script>
+
+</body>
+</html>
+
+
