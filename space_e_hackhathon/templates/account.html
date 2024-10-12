@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Compte</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Bienvenue sur votre compte, {{ name }}!</h1>
+        <div class="menu-container">
+            <button id="menuToggle" class="menu-toggle">&#8942;</button> <!-- Trois petits points -->
+            <nav id="menu" class="menu">
+                <ul>
+                    <li><a href="/favorites">Liste de Favoris</a></li>
+                    <li><a href="/account_info">Informations sur le Compte</a></li>
+                    <li><a href="/logout">Déconnexion</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <script>
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('menu').classList.toggle('show');
+        });
+    </script>
+</body>
+</html>

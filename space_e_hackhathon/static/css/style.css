@@ -1,26 +1,15 @@
-/* styles.css */
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
+/* Ajoutez ces styles à votre fichier style.css existant */
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.flex-container {
+.auth-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.flex-item {
-    flex-basis: calc(33.333% - 20px);
+.auth-box {
+    flex-basis: calc(50% - 20px);
     margin-bottom: 20px;
     background-color: white;
     padding: 20px;
@@ -28,30 +17,124 @@ body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-h1, h2 {
+.auth-box h2 {
+    text-align: center;
     color: #333;
+    margin-bottom: 20px;
 }
 
-p {
-    color: #666;
+.auth-box input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
-.button {
-    display: inline-block;
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.button:hover {
-    background-color: #0056b3;
+.auth-box .button {
+    width: 100%;
 }
 
 @media (max-width: 768px) {
-    .flex-item {
+    .auth-box {
         flex-basis: 100%;
     }
+}
+
+/* Assurez-vous que ces styles sont présents pour le menu et le contenu une fois connecté */
+
+.menu-container {
+    position: relative;
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 10px 0;
+    z-index: 1000;
+}
+
+.menu.show {
+    display: block;
+}
+
+.menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu ul li a {
+    display: block;
+    padding: 10px 20px;
+    color: #333;
+    text-decoration: none;
+}
+
+.menu ul li a:hover {
+    background-color: #f4f4f4;
+}
+
+.content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+
+
+
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
 }

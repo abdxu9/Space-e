@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations du Compte</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Informations sur le Compte</h1>
+    <p>Nom : {{ user.name }}</p>
+    <p>Email : {{ user.email }}</p>
+    <p>Âge : {{ user.age }}</p>
+    <a href="/account">Retour au Compte</a>
+</body>
+</html>
