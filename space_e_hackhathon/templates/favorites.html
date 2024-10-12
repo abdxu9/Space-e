@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Favoris</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Mes Favoris</h1>
+    </header>
+
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for favorite in favorites %}
+                <tr>
+                    <td>{{ favorite.name }}</td>
+                    <td>{{ favorite.latitude }}</td>
+                    <td>{{ favorite.longitude }}</td>
+                    <td>
+                        <!-- Formulaire pour retirer un favori -->
+                        <form action="{{ url_for('remove_favorite', favorite_id=favorite.id) }}" method="POST">
+                            <button type="submit">Retirer</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">Aucun favori trouvé</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
