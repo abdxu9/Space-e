@@ -31,3 +31,66 @@ if (response.headers.get('content-type') && response.headers.get('content-type')
 .catch(function(err) {
     console.error('Fetch error: ', err); // Handle any errors
 });
+
+
+async function getLocationAndCallAPI() {
+try {
+    // Get current location
+    const position = await getCurrentLocation();
+
+    // Extract latitude and longitude from Geolocation API
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    console.log("Current Location: ", latitude, longitude);
+
+    // Prepare query params for GraphHopper
+    const query = new URLSearchParams({
+    key: 'cf3d916c-ca66-43f1-9889-d5efbc56d457'  // Replace with your GraphHopper API key
+    }).toString();
+
+    // Call GraphHopper API with the fetched location
+    const resp = await fetch(
+    `https://graphhopper.com/api/1/matrix?${query}`,
+    {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+        from_points: [
+            [longitude, latitude]  // Use current location as a starting point
+        ],
+        to_points: [
+            [3.08743, 45.77116]
+        ],
+        from_point_hints: ['Current Location'],  // Label for the current location
+        to_point_hints: ['lecoq'],
+        out_arrays: ['weights', 'times', 'distances'],
+        vehicle: 'car'
+        })
+    }
+    );
+
+    const data = await resp.json();
+    console.log('GraphHopper Response:', data);
+
+} catch (error) {
+    console.error('Error:', error);
+}
+}
+
+// Helper function to wrap the Geolocation API in a Promise
+function getCurrentLocation() {
+return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+    } else {
+    reject(new Error("Geolocation is not supported by this browser."));
+    }
+});
+}
+
+// Call the function
+getLocationAndCallAPI();
+
