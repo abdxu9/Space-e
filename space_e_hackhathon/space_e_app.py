@@ -110,13 +110,13 @@ def login():
     return redirect(url_for('home'))
 
 
-# Route for dashboard (index3.html)
+# Route for dashboard (index.html)
 @app.route('/dashboard')
 def dashboard():
     user = session.get('user')
     if not user:
         return redirect(url_for('home'))
-    return render_template('index3.html', user=user)
+    return render_template('index.html', user=user)
 
 
 
