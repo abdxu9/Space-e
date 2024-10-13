@@ -1,0 +1,134 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f0f4f8;
+    color: #333;
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Header Styling */
+header {
+    background-color: #e7f9ec; /* Pastel Green */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Header Title Styling */
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Menu Container Styling */
+.menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Menu Toggle Button */
+.menu-toggle {
+    background-color: #4CAF50; /* Darker Green */
+    color: white;
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.menu-toggle:hover {
+    background-color: #45a049; /* Hover Effect */
+}
+
+/* Menu Styling */
+.menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    z-index: 1;
+}
+
+/* Menu Show on Toggle */
+.menu.show {
+    display: block;
+}
+
+/* Menu List Styling */
+.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Menu Item Styling */
+.menu ul li {
+    margin-bottom: 10px;
+}
+
+.menu ul li:last-child {
+    margin-bottom: 0;
+}
+
+/* Menu Links Styling */
+.menu ul li a {
+    text-decoration: none;
+    color: #4CAF50; /* Pastel Green */
+    font-size: 18px;
+    padding: 10px;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.menu ul li a:hover {
+    background-color: #f4f4f9;
+    border-radius: 5px;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    header {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .menu-toggle {
+        font-size: 20px;
+    }
+
+    .menu ul li a {
+        font-size: 16px;
+    }
+}

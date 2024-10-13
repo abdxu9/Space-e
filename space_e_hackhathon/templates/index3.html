@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPACE - E avec itinéraire</title>
+    <!-- Lien vers le fichier CSS -->
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- Lien vers Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Lien vers Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <style>
+        /* Style pour la carte */
+        #map { height: 500px; width: 100%; }
+        #error-message { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <!-- Fenêtre Déroulante en haut à droite -->
+    <div class="dropdown" id="dropdownMenu">
+        <button class="dropbtn" id="dropdownButton"><i class="fas fa-bars"></i></button>
+        <div class="dropdown-content" role="menu" id="dropdownContent">
+            <a href="/account_info" role="menuitem">Compte</a>
+            <a href="/favorites" role="menuitem">Favoris</a>
+            <a href="/logout" role="menuitem">Deconnexion</a>
+            
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dropbtn = document.getElementById('dropdownButton');
+            var dropdown = document.getElementById('dropdownContent');
+            var isMobile = window.matchMedia("(max-width: 768px)").matches;
+        
+            function toggleMenu() {
+                dropdown.classList.toggle('show');
+            }
+        
+            if (isMobile) {
+                dropbtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleMenu();
+                });
+        
+                // Fermer le menu si on clique en dehors
+                document.addEventListener('click', function(e) {
+                    if (!dropdown.contains(e.target) && !dropbtn.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                    }
+                });
+            } else {
+                // Pour les grands écrans, on garde le comportement de survol
+                dropdown.addEventListener('mouseleave', function() {
+                    dropdown.classList.remove('show');
+                });
+            }
+        
+            // Gérer le redimensionnement de la fenêtre
+            window.addEventListener('resize', function() {
+                isMobile = window.matchMedia("(max-width: 768px)").matches;
+                if (!isMobile) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        });
+    </script>
+
+    <h1>SPACE - E gérer votre paisibilité</h1>
+
+    <!-- Formulaire de recherche -->
+    <form action="/search" method="GET">
+        <input type="search" name="query" placeholder="Rechercher..." aria-label="Search">
+        <button type="submit"><i class="fas fa-search"></i></button>
+    </form>
+
+    <!-- Div pour afficher la carte -->
+    <div id="map"></div>
+    <div id="error-message"></div>
+
+    <!-- Scripts nécessaires -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+ integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+ crossorigin=""></script>
+
+
+    <div id="park-info-popup" class="floating-menu">
+        <h2 id="park-name">Nom du Parc</h2>
+        <p><strong>Pourcentage de personnes : </strong><span id="percentage"></span>%</p>
+        <p><strong>Ensoleillement : </strong><span id="sunlight"></span> heures</p>
+        <p><strong>Distance : </strong><span id="distance"></span> km</p>
+        <button id="add-favorite-button">Ajouter aux Favoris</button>
+    </div>
+    <script src="../static/js/script.js"></script>
+
+
+
+
+</body>
+</html>

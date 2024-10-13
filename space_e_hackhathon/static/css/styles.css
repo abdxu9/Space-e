@@ -1,0 +1,234 @@
+/* styles.css */
+
+/* Réinitialiser les marges et paddings de tous les éléments */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Styles généraux */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    overflow: hidden; /* Empêche le scroll sur la page */
+}
+
+/* Styles pour le titre */
+h1 {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #4CAF50; /* Couleur verte pour le titre */
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 24px;
+    z-index: 1001; /* Pour s'assurer que le titre est au-dessus de la carte */
+    text-align: center;
+    background: none; /* Suppression du fond transparent */
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 20px; /* Réduire la taille de la police sur les petits écrans */
+        padding: 8px 15px; /* Ajuster le padding */
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 18px; /* Réduire encore plus la taille de la police sur très petits écrans */
+        padding: 5px 10px; /* Ajuster le padding */
+    }
+}
+
+
+
+
+
+
+/* Barre de recherche */
+form {
+    position: absolute;
+    top: 70px; /* Placé sous le titre */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px;
+    border-radius: 25px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none; /* Suppression du fond transparent */
+}
+
+/* Style du champ de recherche */
+input[type="search"] {
+    width: 250px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    outline: none;
+    transition: width 0.3s ease;
+}
+
+/* Style du bouton de recherche */
+button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    margin-left: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    transition: background-color 0.3s ease;
+}
+
+button i {
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+/* Styles pour la fenêtre déroulante */
+/* Styles pour la fenêtre déroulante */
+.dropdown {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1001;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #45a049;
+}
+
+/* Contenu du menu déroulant */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    min-width: 200px;
+    max-width: 80vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    z-index: 9999;
+}
+
+/* Lien à l'intérieur du menu déroulant */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid #ddd;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Afficher le menu au survol sur les grands écrans */
+@media (min-width: 769px) {
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+}
+
+/* Styles pour les petits écrans (mobiles) */
+@media (max-width: 768px) {
+    .dropdown-content {
+        max-width: 90vw;
+        max-height: 70vh;
+    }
+    
+    /* Classe pour afficher le menu sur mobile */
+    .dropdown-content.show {
+        display: block;
+    }
+}
+
+@media (max-width: 480px) {
+    .dropdown-content {
+        min-width: 140px;
+    }
+}
+
+
+/* Styles pour la carte */
+#map {
+    flex: 1;
+    width: 100vw;  /* Assure que la carte prend toute la largeur de la fenêtre */
+    height: 100vh; /* Assure que la carte prend toute la hauteur de la fenêtre */
+}
+
+
+
+
+/* Floating menu for park details */
+.floating-menu {
+    position: absolute;
+    display: none;
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+}
+
+.floating-menu h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.floating-menu p {
+    margin: 5px 0;
+}
+
+.floating-menu button {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.floating-menu button:hover {
+    background-color: #45a049;
+}

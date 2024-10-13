@@ -64,10 +64,15 @@ class Favorite(db.Model):
 # Créer la base de données et la table
 with app.app_context():
     db.create_all()
+    
+with app.app_context():
+    new_favorite = Favorite(name="Mon Favori", latitude=48.8566, longitude=2.3522, user_id=1)  # Assurez-vous que l'ID d'utilisateur existe
+    db.session.add(new_favorite)
+    db.session.commit()
 
-@app.route('/')
+@app.route('/acceuil')
 def home():
-    return render_template('index.html', user=session.get('user'))
+    return render_template('acceuil.html', user=session.get('user'))
 
 @app.route('/add_user', methods=['POST'])
 def add_user():
@@ -99,10 +104,23 @@ def login():
     user = User.query.filter_by(email=email).first()
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):        
         session['user'] = {'name': user.name, 'email': user.email, 'age': user.age}
-        return redirect(url_for('account'))
+        return redirect(url_for('dashboard'))
     
     flash("Identifiants invalides.")
     return redirect(url_for('home'))
+
+
+# Route for dashboard (index3.html)
+@app.route('/dashboard')
+def dashboard():
+    user = session.get('user')
+    if not user:
+        return redirect(url_for('home'))
+    return render_template('index3.html', user=user)
+
+
+
+
 
 @app.route('/logout')
 def logout():
